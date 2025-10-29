@@ -1,0 +1,21 @@
+# SHACL and validation example taken from the net:
+# https://www.utwente.nl/en/ces/sal/exams/Linked-Data-and-Semantic-Web/ldsw-lecture7.pdf
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/ns#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+    ex:PersonShape a sh:NodeShape ;
+      sh:targetClass ex:Person ;
+      sh:property [
+        sh:path ex:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+      ] ;
+      sh:property [
+        sh:path ex:birthDate ;
+        sh:datatype xsd:date ;
+        sh:path schema:age ;
+        sh:minInclusive 20 ;
+      ] .

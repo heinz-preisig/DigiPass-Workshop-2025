@@ -1,0 +1,51 @@
+# person's first name, name, birth date and social security number
+# source: https://www.tellura.co.uk/shacl/ -- modified
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:PersonShape a sh:NodeShape ;
+    sh:targetClass ex:Person ;
+
+    # first name property
+    sh:property [
+        sh:path ex:firstName ;
+        sh:datatype xsd:string ;        
+        sh:pattern "^[A-Z][a-z]*$" ;
+        sh:minCount 1 ;
+        sh:name "name" ;
+        sh:description "Heinz" ;
+    ] ;
+    
+    
+    # Name property
+    sh:property [
+        sh:path ex:name ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[A-Z][a-z]*$" ;
+        sh:minCount 1 ;
+        sh:name "name" ;
+        sh:description "Preisig" ;
+    ] ;
+
+    # Birth date property
+    sh:property [
+        sh:path ex:birthDate ;
+        sh:datatype xsd:date ;
+        sh:minInclusive "1990-01-01"^^xsd:date ;
+        sh:maxInclusive "2025-12-31"^^xsd:date ;
+        sh:name "date of birth" ;
+        sh:example "1985-07-23" ;
+    ] ;
+
+    # Social Security Number property
+    sh:property [
+        sh:path ex:ssn ;
+        sh:datatype xsd:string ;
+        sh:pattern "^\\d{3}-\\d{2}-\\d{4}$" ;
+        sh:severity sh:Warning ;
+        sh:name "social security number" ;
+        sh:maxCount 1 ;
+        sh:description "123-45-6789" ;
+    ] .
