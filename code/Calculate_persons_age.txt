@@ -1,0 +1,33 @@
+@prefix ex: <http://example.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:property [
+    sh:path ex:birthDate ;
+    sh:datatype xsd:date ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path ex:age ;
+    sh:datatype xsd:integer ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path ex:age ; # Infer the age based on birthdate
+    sh:datatype xsd:integer ;
+    sh:sparql """
+      SELECT ?node ( (xsd:integer(SUBSTR(STR(?today), 1, 4)) - xsd:integer(SUBSTR(STR(?birthDate), 1, 4))) AS ?calculatedAge) WHERE {
+        BIND(NOW() AS ?today)
+        ?node ex:birthDate ?birthDate .
+        FILTER(?birthDate < ?today) # Ensure birthdate is in the past
+      }
+    """
+  ] ;
+.
+
+ex:Alice a ex:Person ;
+  ex:birthDate "1990-05-15"^^xsd:date ;
+  ex:age "35"^^xsd:integer ;
+.
