@@ -1,0 +1,24 @@
+
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:pattern "^http://mydomain.com/person/" ;
+  sh:property [
+    sh:name "first name" ;
+    sh:path ex:firstName ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ; 
+    ] ;
+  sh:property ex:Person-lastName .
+
+ex:Person-lastName 
+  sh:name "last name" ;
+  sh:path ex:lastName ;
+  sh:minCount 1 ;
+  sh:maxCount 1 ;
+  sh:datetype xsd:string ;
+  sh:maxLength 20 .
+

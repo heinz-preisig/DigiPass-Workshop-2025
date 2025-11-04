@@ -1,0 +1,25 @@
+# define prefixes to improve readability
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# define root shape with the identifier PersonShape
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:pattern "^http://mydomain.com/person/" ;
+  sh:property ex:Person-first-name ;           # add property node for first name
+  sh:property ex:Person-last-name .            # add property node for last name
+ 
+ex:Person-first-name                           # property node for first name
+    sh:name "first name" ;                     # prompt "first name"
+    sh:path ex:firstName ;                     # applies to all instances of "firstName" in class "Person"
+    sh:minCount 1 ;                            # minimal number of first names == 1
+    sh:datatype xsd:string .                   # data type == string
+               
+ex:Person-last-name                            # property node for last name
+  sh:name "last name" ;                        # prompt "last name"
+  sh:path ex:lastName ;                        # applies to all instances of "lastName" in class "Person"
+  sh:minCount 1 ;                              # minimal number of last name == 1
+  sh:maxCount 1 ;                              # maximal number of last name == 1
+  sh:datetype xsd:string ;                     # data type == string
+  sh:maxLength 20 .                            # maximal number of characters == 20
