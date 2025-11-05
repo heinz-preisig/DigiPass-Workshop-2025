@@ -2,14 +2,17 @@
 
 # https://ulb-darmstadt.github.io/shacl-form/#try-your-own
 
+# define prefixes to improve readability
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ex: <http://example.org#> .
 
-ex:ExampleShape
+
+ex:ExampleShape                  # root shape
    a sh:NodeShape, rdfs:Class ;
-     sh:property [
-     sh:name 'my value' ;
-     sh:path ex:exampleValue ;
-     sh:maxCount 3 ].
+     sh:property [               # blank node
+     sh:name 'my value' ;        # defines prompt 
+     sh:path ex:exampleValue ;   # applies to all instances of exampleValue in class NodeShape
+     sh:datatype xsd:integer ;   # declares integer for exampleValue
+     sh:maxCount 3 ].            # limits exampleValue to max 3 entries
 

@@ -1,0 +1,55 @@
+# person form exercise to generate a form in 
+# https://ulb-darmstadt.github.io/shacl-form/#try-your-own
+##########################################################
+
+# define prefixes to improve readability
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# define root shape with the identifier PersonShape
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:property ex:Person-first-name ;           # add property node for first name
+  sh:property ex:Person-last-name  ;           # add property node for last name
+  sh:property ex:Person-birth-date ;           # add property node for birthdate
+  sh:property ex:Person-SSN-US .               # add property node for SSN-US
+ 
+ex:Person-first-name                           # property node for first name
+  sh:name "first name" ;                       # prompt "first name"
+  sh:path ex:firstName ;                       # applies to all instances of "firstName" in class "Person" 
+  sh:datatype xsd:string ;                     # data type == string
+  sh:description "Name" ;                      # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
+  sh:minCount 1 .                              # minimal number of first names == 1
+               
+ex:Person-last-name                            # property node for last name
+  sh:name "last name" ;                        # prompt "last name"
+  sh:path ex:lastName ;                        # applies to all instances of "lastName" in class "Person" 
+  sh:datetype xsd:string ;                     # data type == string
+  sh:description "Familyname" ;                # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
+  sh:minCount 1 ;                              # minimal number of last name == 1
+  sh:maxCount 1 ;                              # maximal number of last name == 1
+  sh:maxLength 20 .                            # maximal number of characters == 20
+  
+ex:Person-birth-date                           # birthdate property
+  sh:name "date of birth" ;                    # prompt
+  sh:path ex:birthDate ;                       # applies to all instances of "birthDate" in class "Person"
+  sh:datatype xsd:date ;                       # its a date -- defines format
+  sh:minInclusive "1990-01-01"^^xsd:date ;     # lower constraint
+  sh:maxInclusive "2025-12-31"^^xsd:date ;     # upper constraint
+  sh:example "1985-07-23" ;                    # example
+  sh:maxCount 1.                               # only one birth date
+  
+
+ex:Person-SSN-US                               # US social security number
+  sh:path ex:ssn ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{3}-\\d{2}-\\d{4}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number" ;
+  sh:maxCount 1 ;
+  sh:description "123-45-6789" .
+
+

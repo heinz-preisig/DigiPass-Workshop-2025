@@ -1,0 +1,39 @@
+@prefix ex:    <http://example.com/> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix dash:  <http://datashapes.org/dash#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+
+
+ex:Address
+	a rdfs:Class, sh:NodeShape ;
+	sh:property ex:Address-state ;
+	sh:or (
+		[
+			sh:property [
+				sh:path ex:country ;
+				sh:hasValue ex:USA ;
+			] ;
+			sh:property [
+				sh:path ex:state ;
+				sh:in ( "AL" "AK" "AZ" "AR") ;
+			]
+		]
+		[
+			sh:property [
+				sh:path ex:country ;
+				sh:hasValue ex:Australia ;
+			] ;
+			sh:property [
+				sh:path ex:state ;
+				sh:in ( "ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA" ) ;
+			]
+		]
+	) ;
+.
+ex:Address-state
+	a sh:PropertyShape ;
+	sh:path ex:state ;
+.

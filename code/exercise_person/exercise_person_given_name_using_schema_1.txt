@@ -1,0 +1,23 @@
+# person form exercise to generate a form in 
+# https://ulb-darmstadt.github.io/shacl-form/#try-your-own
+##########################################################
+
+# exercise 2 : constrain to only one given name
+
+##########################################################
+
+
+# define prefixes to improve readability
+@prefix ex: <http://example.org/ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+schema:PersonShape a sh:NodeShape ;
+  sh:targetClass schema:Person ;
+  sh:property [
+     sh:name 'given name' ;
+     sh:path schema:givenName ;
+     sh:minCount 1 ;
+     ] ;
+.

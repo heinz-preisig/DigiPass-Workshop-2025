@@ -1,0 +1,61 @@
+# chatGPT generated example for alternatives
+
+@prefix ex:    <http://example.com/> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix dash:  <http://datashapes.org/dash#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Person ;
+    sh:name "Person shape" ;
+    sh:description "A person must have either an email or a phone number." ;
+
+    # DASH section for contact information
+    dash:group [
+        a dash:PropertyGroup ;
+        dash:groupName "Contact Information" ;
+        dash:groupDescription "Enter either an email or a phone number" ;
+        dash:properties (
+            # Email property — shown only if no phone is present
+            [
+                sh:path ex:email ;
+                sh:name "Email" ;
+                sh:datatype xsd:string ;
+                sh:maxCount 1 ;
+                dash:editor dash:TextFieldEditor ;
+                dash:singleLine true ;
+                dash:showConditions ( [
+                    a dash:ConditionalShape ;
+                    dash:condition [
+                        sh:path ex:phone ;
+                        sh:maxCount 0 ;
+                    ] ;
+                ] ) ;
+            ]
+            # Phone property — shown only if no email is present
+            [
+                sh:path ex:phone ;
+                sh:name "Phone" ;
+                sh:datatype xsd:string ;
+                sh:maxCount 1 ;
+                dash:editor dash:TextFieldEditor ;
+                dash:singleLine true ;
+                dash:showConditions ( [
+                    a dash:ConditionalShape ;
+                    dash:condition [
+                        sh:path ex:email ;
+                        sh:maxCount 0 ;
+                    ] ;
+                ] ) ;
+
+            ]
+        ) ;
+    ] ;
+
+    # Validation rule: must have exactly one of them
+    sh:xone (
+        [ sh:property [ sh:path ex:email ; sh:minCount 1 ] ]
+        [ sh:property [ sh:path ex:phone ; sh:minCount 1 ] ]
+    ) .
