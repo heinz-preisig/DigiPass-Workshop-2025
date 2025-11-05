@@ -3,5 +3,5 @@
 
 git add . 
 git commit . -m"auto commit"
-git push --all -u > push_github.log
+git push --all -u > push.log
 
