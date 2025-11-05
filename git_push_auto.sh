@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-git add . 
+git add . > push.log
 git commit . -m"auto commit"
-git push --all -u > push.log
+git push --all -u >> push.log
 
