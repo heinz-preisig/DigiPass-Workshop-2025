@@ -3,6 +3,7 @@
 ##########################################################
 
 # exercise 2 : constrain to only one given name
+#  tip use sh:maxCount
 
 ##########################################################
 
@@ -13,11 +14,11 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-schema:PersonShape a sh:NodeShape ;
-  sh:targetClass schema:Person ;
-  sh:property [
-     sh:name 'given name' ;
-     sh:path schema:givenName ;
-     sh:minCount 1 ;
+schema:PersonShape a sh:NodeShape ;  # define root schape
+  sh:targetClass schema:Person ;     # applies to all instances of class "person"
+  sh:property [                      # blank node
+     sh:name 'given name' ;          # prompt
+     sh:path schema:givenName ;      # applies to all instances of "givenName" in class "person"
+     sh:minCount 1 ;                 # must have at least one
      ] ;
 .

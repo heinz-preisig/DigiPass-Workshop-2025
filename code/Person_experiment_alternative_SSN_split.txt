@@ -1,0 +1,79 @@
+# person form exercise to generate a form in 
+# https://ulb-darmstadt.github.io/shacl-form/#try-your-own
+##########################################################
+
+# the idea was to have a dynamic form.
+# an extension to Knublauch's  https://www.datashapes.org/dynamic.html 
+# kind of works, but does not keep sequence. 
+# adding order did not work either, actually got worse.
+# SEPARATING DOES NOT WORK
+##########################################################
+
+
+# define prefixes to improve readability
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# define root shape with the identifier PersonShape
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:property ex:Person-first-name ;           # add property node for first name
+  sh:property ex:SSN .
+	 
+ex:Person-first-name                           # property node for first name
+  sh:name "first name" ;                       # prompt "first name"
+  sh:path ex:firstName ;                       # applies to all instances of "firstName" in class "Person" 
+  sh:datatype xsd:string ;                     # data type == string
+  sh:description "Name" ;                      # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
+  sh:minCount 1 .         
+  
+ex:SSN
+sh:or (
+		[
+			sh:property [
+				sh:path ex:country ;
+                sh:name "USA" ;
+				sh:hasValue ex:USA ;
+			] ;
+			sh:property [
+				sh:path ex:state ;
+				sh:name "state" ;
+				sh:in ( "AL" "AK" "AZ" "AR" ) ;
+			];			
+			sh:property ex:Person-SSN-USA;
+		]
+		[
+			sh:property [
+				sh:path ex:country ;
+                sh:name "Australia" ;
+				sh:hasValue ex:Australia ; 
+			] ;
+			sh:property [
+				sh:path ex:state ;
+				sh:name "territory" ;
+				sh:in ( "ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA" ) ;
+			] ;
+			sh:property ex:Person-SSN-AU;
+			sh:order 3;
+		]
+	) .
+
+ex:Person-SSN-USA                               # US social security number
+  sh:path ex:ssn ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{3}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number" ;
+  sh:maxCount 1 ;
+  sh:description "123" .
+
+ex:Person-SSN-AU                               # US social security number
+  sh:path ex:ssn ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{2}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number" ;
+  sh:maxCount 1 ;
+  sh:description "12" .

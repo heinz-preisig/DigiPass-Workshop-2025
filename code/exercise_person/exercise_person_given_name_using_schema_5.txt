@@ -2,43 +2,55 @@
 # https://ulb-darmstadt.github.io/shacl-form/#try-your-own
 ##########################################################
 
-# Exercise 6:
-# add a string pattern to first and last name constraining to characters only
-#  tip use sh:pattern and a regular expressio
-
-# add a birth date for the person limiting to 1990-01-01 to 2025-07-23
-#  tip use sh:minInclsive and sh:maxInclusive with the format xsd:date
-
-# add a social security number property following the pattern 123-45-6789
-#  tip use sh:pattern and regular expression to force a pattern
-#  tip use sh:example to help the user to define it correctly
-
-
-##########################################################
-
-
 # define prefixes to improve readability
 @prefix ex: <http://example.org/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
 
 # define root shape with the identifier PersonShape
 ex:PersonShape a sh:NodeShape ;
-  sh:targetClass ex:Person ;
+  sh:targetClass schema:Person ;
   sh:property ex:Person-first-name ;           # add property node for first name
-  sh:property ex:Person-last-name .            # add property node for last name
+  sh:property ex:Person-last-name  ;           # add property node for last name
+  sh:property ex:Person-birth-date ;           # add property node for birthdate
+  sh:property ex:Person-SSN-US .               # add property node for SSN-US
  
 ex:Person-first-name                           # property node for first name
-    sh:name "first name" ;                     # prompt "first name"
-    sh:path ex:firstName ;                     # applies to all instances of "firstName" in class "Person"
-    sh:minCount 1 ;                            # minimal number of first names == 1
-    sh:datatype xsd:string .                   # data type == string
+  sh:name "first name" ;                       # prompt "first name"
+  sh:path schema:firstName ;                       # applies to all instances of "firstName" in class "Person" 
+  sh:datatype xsd:string ;                     # data type == string
+  sh:description "Name" ;                      # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
+  sh:minCount 1 .                              # minimal number of first names == 1
                
 ex:Person-last-name                            # property node for last name
   sh:name "last name" ;                        # prompt "last name"
-  sh:path ex:lastName ;                        # applies to all instances of "lastName" in class "Person"
+  sh:path schema:lastName ;                        # applies to all instances of "lastName" in class "Person" 
+  sh:datetype xsd:string ;                     # data type == string
+  sh:description "Familyname" ;                # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
   sh:minCount 1 ;                              # minimal number of last name == 1
   sh:maxCount 1 ;                              # maximal number of last name == 1
-  sh:datetype xsd:string ;                     # data type == string
-  sh:maxLength 20                              # maximal number of characters == 20
-.
+  sh:maxLength 20 .                            # maximal number of characters == 20
+  
+ex:Person-birth-date                           # birthdate property
+  sh:name "date of birth" ;                    # prompt
+  sh:path schema:birthDate ;                       # applies to all instances of "birthDate" in class "Person"
+  sh:datatype xsd:date ;                       # its a date -- defines format
+  sh:minInclusive "1990-01-01"^^xsd:date ;     # lower constraint
+  sh:maxInclusive "2025-12-31"^^xsd:date ;     # upper constraint
+  sh:example "1985-07-23" ;                    # example
+  sh:maxCount 1.                               # only one birth date
+  
+
+ex:Person-SSN-US                               # US social security number
+  sh:path schema:ssn ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{3}-\\d{2}-\\d{4}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number" ;
+  sh:maxCount 1 ;
+  sh:description "123-45-6789" .
+
+

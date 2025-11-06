@@ -2,9 +2,20 @@
 # https://ulb-darmstadt.github.io/shacl-form/#try-your-own
 ##########################################################
 
-# exercise 5: split off first name and last name as separate property nodes
+# Exercise 6:
+# add a string pattern to first and last name constraining to characters only
+#  tip use sh:pattern and a regular expression
+
+# add a birth date for the person limiting to 1990-01-01 to 2025-07-23
+#  tip use sh:minInclsive and sh:maxInclusive with the format xsd:date
+
+# add a social security number property following the pattern 123-45-6789
+#  tip use sh:pattern and regular expression to force a pattern
+#  tip use sh:example to help the user to define it correctly
+
 
 ##########################################################
+
 
 # define prefixes to improve readability
 @prefix ex: <http://example.org/> .
@@ -12,21 +23,23 @@
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix schema: <http://schema.org/> .
 
-
 # define root shape with the identifier PersonShape
-ex:PersonShape a sh:NodeShape ;   # define root schape
-  sh:targetClass schema:Person ;  # applies to all instances of class "person" 
-  sh:property [                   # add blank node with properties
-    sh:name "first name" ;        # prompt "first name"
-    sh:path schema:firstName ;    # applies to all instances of "firstName" in class "Person"
-    sh:minCount 1 ;               # minimal number of first names == 1
-    sh:datatype xsd:string ;      # data type == string
-    ] ;
-  sh:property[                    # add blank node with properties
-    sh:name "last name" ;         # prompt "last name"
-    sh:path schema:lastName ;     # applies to all instances of "lastName" in class "Person"
-    sh:minCount 1 ;               # minimal number of last name == 1 
-    sh:maxCount 1 ;               # maximal number of last name == 1
-    sh:datetype xsd:string ;      # data type == string
-    sh:maxLength 20]              # maximal number of characters == 20
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass schema:Person ;
+  sh:property ex:Person-first-name ;           # add property node for first name
+  sh:property ex:Person-last-name .            # add property node for last name
+ 
+ex:Person-first-name                           # property node for first name
+    sh:name "first name" ;                     # prompt "first name"
+    sh:path schema:firstName ;                 # applies to all instances of "firstName" in class "Person"
+    sh:minCount 1 ;                            # minimal number of first names == 1
+    sh:datatype xsd:string .                   # data type == string
+               
+ex:Person-last-name                            # property node for last name
+  sh:name "last name" ;                        # prompt "last name"
+  sh:path schema:lastName ;                    # applies to all instances of "lastName" in class "Person"
+  sh:minCount 1 ;                              # minimal number of last name == 1
+  sh:maxCount 1 ;                              # maximal number of last name == 1
+  sh:datetype xsd:string ;                     # data type == string
+  sh:maxLength 20                              # maximal number of characters == 20
 .

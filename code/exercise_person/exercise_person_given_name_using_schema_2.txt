@@ -2,7 +2,10 @@
 # https://ulb-darmstadt.github.io/shacl-form/#try-your-own
 ##########################################################
 
-# exercise 2 : constrain to only one given name
+# exercise 3 : 
+# extend to first name and given name
+# limit the number of characters for the last name to 20
+#  tip use sh:maxLength
 
 ##########################################################
 
@@ -16,8 +19,9 @@
 schema:PersonShape a sh:NodeShape ;  # define root schape
   sh:targetClass schema:Person ;     # applies to all instances of class "person"
   sh:property [                      # blank node
-     sh:name 'given name' ;          # prompt
+     sh:name 'given name' ;
      sh:path schema:givenName ;      # applies to all instances of "givenName" in class "person"
      sh:minCount 1 ;                 # must have at least one
+     sh:maxCount 1 ;                 # must have at most one
      ] ;
 .

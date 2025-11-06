@@ -2,26 +2,32 @@
 # https://ulb-darmstadt.github.io/shacl-form/#try-your-own
 ##########################################################
 
-# exercise 3 : 
-# extend to first name and given name
-# limit the number of characters for the last name to 20
-#  tip use sh:maxLength
+# exercise 5: split off first name and last name as separate property nodes
+#   tip: generate separate property node and refer to them in the root node
 
 ##########################################################
 
-
 # define prefixes to improve readability
-@prefix ex: <http://example.org/ns#> .
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix schema: <http://schema.org/> .
-@prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-schema:PersonShape a sh:NodeShape ;  # define root schape
-  sh:targetClass schema:Person ;     # applies to all instances of class "person"
-  sh:property [                      # blank node
-     sh:name 'given name' ;
-     sh:path schema:givenName ;      # applies to all instances of "givenName" in class "person"
-     sh:minCount 1 ;                 # must have at least one
-     sh:maxCount 1 ;                 # must have at most one
-     ] ;
+
+# define root shape with the identifier PersonShape
+ex:PersonShape a sh:NodeShape ;   # define root schape
+  sh:targetClass schema:Person ;  # applies to all instances of class "person" 
+  sh:property [                   # add blank node with properties
+    sh:name "first name" ;        # prompt "first name"
+    sh:path schema:firstName ;    # applies to all instances of "firstName" in class "Person"
+    sh:minCount 1 ;               # minimal number of first names == 1
+    sh:datatype xsd:string ;      # data type == string
+    ] ;
+  sh:property[                    # add blank node with properties
+    sh:name "last name" ;         # prompt "last name"
+    sh:path schema:lastName ;     # applies to all instances of "lastName" in class "Person"
+    sh:minCount 1 ;               # minimal number of last name == 1 
+    sh:maxCount 1 ;               # maximal number of last name == 1
+    sh:datetype xsd:string ;      # data type == string
+    sh:maxLength 20]              # maximal number of characters == 20
 .
