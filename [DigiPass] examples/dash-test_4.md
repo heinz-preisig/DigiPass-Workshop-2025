@@ -2,7 +2,7 @@
 
 Define a simple architectural data set
 
-```
+```turtle
 @prefix dash:    <http://datashapes.org/dash#> .
 @prefix dbpedia: <http://dbpedia.org/ontology/> .
 @prefix dcat:    <http://www.w3.org/ns/dcat#> .

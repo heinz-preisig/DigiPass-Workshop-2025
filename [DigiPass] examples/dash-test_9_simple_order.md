@@ -6,7 +6,7 @@ order does not seem to work in the Darmstadt test website
 
 
 
-```
+```turtle
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ex:      <http://example.org/> .
