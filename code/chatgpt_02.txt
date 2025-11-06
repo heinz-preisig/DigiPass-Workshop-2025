@@ -1,0 +1,107 @@
+#######################################################################
+# Dynamic Person form using DASH if/then/else logic
+# Paste this into https://ulb-darmstadt.github.io/shacl-form/#try-your-own
+
+# does not work
+#######################################################################
+
+@prefix ex:  <http://example.org/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dash: <http://datashapes.org/dash#> .
+
+#######################################################################
+# Root Person shape
+#######################################################################
+ex:PersonShape
+  a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:name "Person" ;
+
+  # ---- first name ----
+  sh:property ex:Person-first-name ;
+
+  # ---- country choice ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:country ;
+    sh:name "country" ;
+    sh:in ("USA" "Australia") ;
+    sh:description "Select your country" ;
+    sh:order 2 ;
+    sh:minCount 1 ;
+  ] ;
+
+  # ---- conditional branch depending on chosen country ----
+  sh:node [
+    dash:if [
+      sh:path ex:country ;
+      sh:hasValue ex:USA ;
+    ] ;
+    dash:then ex:Person-USA-Shape ;
+    dash:else ex:Person-AU-Shape ;
+  ] .
+
+#######################################################################
+# Shared property definitions
+#######################################################################
+
+ex:Person-first-name
+  a sh:PropertyShape ;
+  sh:name "first name" ;
+  sh:path ex:firstName ;
+  sh:datatype xsd:string ;
+  sh:description "Name (capitalised)" ;
+  sh:pattern "^[A-Z][a-z]*$" ;
+  sh:minCount 1 ;
+  sh:order 1 .
+
+#######################################################################
+# USA branch
+#######################################################################
+ex:Person-USA-Shape
+  a sh:NodeShape ;
+  sh:name "USA-specific data" ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:state ;
+    sh:name "state" ;
+    sh:in ("AL" "AK" "AZ" "AR") ;
+    sh:order 3 ;
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:ssn ;
+    sh:datatype xsd:string ;
+    sh:pattern "^\\d{3}$" ;
+    sh:severity sh:Warning ;
+    sh:name "social security number" ;
+    sh:description "Three digits" ;
+    sh:maxCount 1 ;
+    sh:order 4 ;
+  ] .
+
+#######################################################################
+# Australia branch
+#######################################################################
+ex:Person-AU-Shape
+  a sh:NodeShape ;
+  sh:name "Australia-specific data" ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:state ;
+    sh:name "territory" ;
+    sh:in ("ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA") ;
+    sh:order 3 ;
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:ssn ;
+    sh:datatype xsd:string ;
+    sh:pattern "^\\d{2}$" ;
+    sh:severity sh:Warning ;
+    sh:name "social security number" ;
+    sh:description "Two digits" ;
+    sh:maxCount 1 ;
+    sh:order 4 ;
+  ] .

@@ -16,6 +16,8 @@
 
 [**SCHEMA ontology**](https://schema.org) A handy ontology for  various purposes
 
+[**Regular Expressions**](https://regex101.com/) regular expressions
+
 
 
 ## Information on SHACL
@@ -73,6 +75,10 @@
 [**cheat sheet**](https://sites.uw.edu/uwlsemanticweb/2020/05/31/shacl-cheat-sheet/) The only cheat sheet found
 
 
+
+## Useful
+
+[**Regex Generator**](https://regex-generator.olafneumann.org/?sampleText=123-12-1234&flags=PWL&selection=0%7CCombination%20%5BNumber%20%2B%20Character%5D) An online RegEx generator
 
 Not so useful
 

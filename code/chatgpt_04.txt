@@ -1,0 +1,88 @@
+#######################################################################
+# Improved Person form using sh:or with distinct paths and literals
+#######################################################################
+
+@prefix ex:  <http://example.org/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#######################################################################
+# Root Person shape
+#######################################################################
+ex:PersonShape
+  a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:property ex:Person-first-name ;
+  sh:or (
+    [
+      sh:property [
+        sh:path ex:country ;
+        sh:hasValue "USA" ;
+        sh:name "USA" ;
+        sh:maxCount 1 ;
+      ] ;
+      sh:property [
+        sh:path ex:stateUSA ;
+        sh:name "state" ;
+        sh:in ("AL" "AK" "AZ" "AR") ;
+        sh:datatype xsd:string ;
+      ] ;      
+      sh:property ex:Person-SSN-USA ;
+      sh:order 3 ;
+    ]
+    [
+      sh:property [
+        sh:path ex:country ;
+        sh:hasValue "Australia" ;
+        sh:name "Australia" ;
+        sh:maxCount 1 ;
+      ] ;
+      sh:property [
+        sh:path ex:territoryAU ;
+        sh:name "territory" ;
+        sh:in ("ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA") ;
+        sh:datatype xsd:string ;
+      ] ;
+      sh:property ex:Person-SSN-AU ;
+      sh:order 3 ;
+    ]
+  ) .
+
+#######################################################################
+# First name property
+#######################################################################
+ex:Person-first-name
+  a sh:PropertyShape ;
+  sh:name "first name" ;
+  sh:path ex:firstName ;
+  sh:datatype xsd:string ;
+  sh:description "Name (capitalised)" ;
+  sh:pattern "^[A-Z][a-z]*$" ;
+  sh:minCount 1 ;
+  sh:order 1 .
+
+#######################################################################
+# USA SSN property
+#######################################################################
+ex:Person-SSN-USA
+  a sh:PropertyShape ;
+  sh:path ex:ssnUSA ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{3}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number (USA)" ;
+  sh:maxCount 1 ;
+  sh:description "Three digits" .
+
+#######################################################################
+# Australia SSN property
+#######################################################################
+ex:Person-SSN-AU
+  a sh:PropertyShape ;
+  sh:path ex:ssnAU ;
+  sh:datatype xsd:string ;
+  sh:pattern "^\\d{2}$" ;
+  sh:severity sh:Warning ;
+  sh:name "social security number (Australia)" ;
+  sh:maxCount 1 ;
+  sh:description "Two digits" .

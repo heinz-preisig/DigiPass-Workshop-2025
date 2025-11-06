@@ -4,8 +4,9 @@
 
 # the idea was to have a dynamic form.
 # an extension to Knublauch's  https://www.datashapes.org/dynamic.html 
-# kind of works, but does not keep sequence. 
-# adding order did not work either, actually got worse.
+# kind of works, 
+# it fails on the drop down -- apparently a problem with the Darmstadt viewr
+# it then does not check for the SSN structure.
 ##########################################################
 
 
@@ -23,25 +24,31 @@ ex:PersonShape a sh:NodeShape ;
 			sh:property [
 				sh:path ex:country ;
                 sh:name "USA" ;
-				sh:hasValue ex:USA ;
+				sh:hasValue "USA" ;
+				sh:maxCount 1 ;
 			] ;
 			sh:property [
 				sh:path ex:state ;
+				sh:datatype xsd:string ;
 				sh:name "state" ;
-				sh:in ( "AL" "AK" "AZ" "AR" ) ;
+				sh:in ("AL" "AK" "AZ" "AR") ;
+				sh:maxCount 1 ;
 			];			
 			sh:property ex:Person-SSN-USA;
+			sh:order 3;
 		]
 		[
 			sh:property [
 				sh:path ex:country ;
                 sh:name "Australia" ;
-				sh:hasValue ex:Australia ; 
+				sh:hasValue "Australia" ; 
+				sh:maxCount 1 ;
 			] ;
 			sh:property [
-				sh:path ex:state ;
+				sh:path ex:territory ;
 				sh:name "territory" ;
 				sh:in ( "ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA" ) ;
+				sh:maxCount 1 ;
 			] ;
 			sh:property ex:Person-SSN-AU;
 			sh:order 3;
@@ -52,7 +59,7 @@ ex:Person-first-name                           # property node for first name
   sh:name "first name" ;                       # prompt "first name"
   sh:path ex:firstName ;                       # applies to all instances of "firstName" in class "Person" 
   sh:datatype xsd:string ;                     # data type == string
-  sh:description "Name" ;                      # example
+  sh:description "First name (capitalised)" ;  # description
   sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
   sh:minCount 1 .         
   
@@ -60,17 +67,17 @@ ex:Person-first-name                           # property node for first name
 ex:Person-SSN-USA                               # US social security number
   sh:path ex:ssn ;
   sh:datatype xsd:string ;
-  sh:pattern "^\\d{3}$" ;
+  sh:pattern "^\\d{3}-\\d{2}-\\d{4}$";
   sh:severity sh:Warning ;
   sh:name "social security number" ;
   sh:maxCount 1 ;
-  sh:description "123" .
+  sh:description "123-45-6789" .
 
 ex:Person-SSN-AU                               # US social security number
   sh:path ex:ssn ;
   sh:datatype xsd:string ;
-  sh:pattern "^\\d{2}$" ;
+  sh:pattern "^\\d{3}-\\d{2}-\\d{4}$" ;
   sh:severity sh:Warning ;
   sh:name "social security number" ;
   sh:maxCount 1 ;
-  sh:description "12" .
+  sh:description "123-45-6789" .

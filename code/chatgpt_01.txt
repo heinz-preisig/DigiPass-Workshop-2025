@@ -1,0 +1,70 @@
+# person form exercise to generate a form in 
+# https://ulb-darmstadt.github.io/shacl-form/#try-your-own
+##########################################################
+
+# the idea was to have a dynamic form.
+# an extension to Knublauch's  https://www.datashapes.org/dynamic.html 
+# kind of works, but does not keep sequence. 
+# adding order did not work either, actually got worse.
+##########################################################
+
+
+# define prefixes to improve readability
+@prefix ex: <http://example.org/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# define root shape with the identifier PersonShape
+
+ex:PersonShape a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:property ex:Person-first-name ;
+  sh:or (
+    ex:Person-USA-Shape
+    ex:Person-AU-Shape
+  ) .
+
+
+ex:Person-first-name                           # property node for first name
+  sh:name "first name" ;                       # prompt "first name"
+  sh:path ex:firstName ;                       # applies to all instances of "firstName" in class "Person" 
+  sh:datatype xsd:string ;                     # data type == string
+  sh:description "Name" ;                      # example
+  sh:pattern "^[A-Z][a-z]*$" ;                 # limit to characters first letter capitalised
+  sh:minCount 1 .         
+  
+ex:Person-USA-Shape
+  a sh:NodeShape ;
+  sh:property [
+    sh:path ex:country ;
+    sh:hasValue ex:USA ;
+    sh:name 'USA' ;
+    ] ;
+  sh:property [
+    sh:path ex:state ;
+    sh:name 'state' ;
+    sh:in ("AL" "AK" "AZ" "AR") ;
+    ] ;
+  sh:property [
+    sh:path ex:Person-SSN-USA ;
+    sh:name "SSN" ;
+    sh:order 3 
+    ].
+
+ex:Person-AU-Shape
+  a sh:NodeShape ;
+  sh:property [
+    sh:path ex:country ;
+    sh:name 'AU' ;
+    sh:hasValue ex:Australia ;
+    ] ;
+  sh:property [
+    sh:path ex:state ;
+    sh:in ("ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA") ;
+    sh:name 'teritorry' ;
+    ] ;
+  sh:property [
+    sh:path ex:Person-SSN-AU ;
+    sh:name 'SSN' ;
+    sh:order 3
+    ] .

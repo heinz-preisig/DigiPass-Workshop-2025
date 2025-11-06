@@ -1,0 +1,97 @@
+#######################################################################
+# Dynamic Person form using separate paths for USA/Australia
+# With placeholder for country field
+
+# does not work
+#######################################################################
+
+@prefix ex:  <http://example.org/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dash: <http://datashapes.org/dash#> .
+
+#######################################################################
+# Root Person shape
+#######################################################################
+ex:PersonShape
+  a sh:NodeShape ;
+  sh:targetClass ex:Person ;
+  sh:name "Person" ;
+
+  # ---- first name ----
+  sh:property ex:Person-first-name ;
+
+  # ---- country ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:country ;
+    sh:name "country" ;
+    sh:description "Select your country" ;
+    sh:order 1 ;
+    sh:minCount 1 ;
+    sh:in ("Select a country..." "USA" "Australia") ;
+    sh:defaultValue "Select a country..." ;
+  ] ;
+
+  # ---- USA state ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:stateUSA ;
+    sh:name "state (USA)" ;
+    sh:description "State (USA only)" ;
+    sh:in ("AL" "AK" "AZ" "AR") ;
+    sh:order 2 ;
+    dash:relevant "ex:country='USA'" ;
+  ] ;
+
+  # ---- USA SSN ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:ssnUSA ;
+    sh:datatype xsd:string ;
+    sh:pattern "^\\d{3}$" ;
+    sh:severity sh:Warning ;
+    sh:name "social security number (USA)" ;
+    sh:description "Three digits" ;
+    sh:maxCount 1 ;
+    sh:order 3 ;
+    dash:relevant "ex:country='USA'" ;
+  ] ;
+
+  # ---- Australia territory ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:territoryAU ;
+    sh:name "territory (Australia)" ;
+    sh:description "Territory (Australia only)" ;
+    sh:in ("ACT" "NSW" "NT" "QLD" "SA" "TAS" "VIC" "WA") ;
+    sh:order 4 ;
+    dash:relevant "ex:country='Australia'" ;
+  ] ;
+
+  # ---- Australia SSN ----
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path ex:ssnAU ;
+    sh:datatype xsd:string ;
+    sh:pattern "^\\d{2}$" ;
+    sh:severity sh:Warning ;
+    sh:name "social security number (Australia)" ;
+    sh:description "Two digits" ;
+    sh:maxCount 1 ;
+    sh:order 5 ;
+    dash:relevant "ex:country='Australia'" ;
+  ] .
+
+#######################################################################
+# First name property
+#######################################################################
+ex:Person-first-name
+  a sh:PropertyShape ;
+  sh:name "first name" ;
+  sh:path ex:firstName ;
+  sh:datatype xsd:string ;
+  sh:description "Name (capitalised)" ;
+  sh:pattern "^[A-Z][a-z]*$" ;
+  sh:minCount 1 ;
+  sh:order 0 .
